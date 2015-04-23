@@ -147,7 +147,6 @@ class neutron::agents::l3 (
 
   neutron_l3_agent_config {
     'DEFAULT/debug':                            value => $debug;
-    'DEFAULT/external_network_bridge':          value => $external_network_bridge;
     'DEFAULT/use_namespaces':                   value => $use_namespaces;
     'DEFAULT/interface_driver':                 value => $interface_driver;
     'DEFAULT/router_id':                        value => $router_id;
@@ -161,6 +160,16 @@ class neutron::agents::l3 (
     'DEFAULT/router_delete_namespaces':         value => $router_delete_namespaces;
     'DEFAULT/agent_mode':                       value => $agent_mode;
     'DEFAULT/allow_automatic_l3agent_failover': value => $allow_automatic_l3agent_failover;
+  }
+
+  if $external_network_bridge {
+    neutron_l3_agent_config {
+      'DEFAULT/external_network_bridge': value => $external_network_bridge;
+    }
+  } else {
+    neutron_l3_agent_config {
+      'DEFAULT/external_network_bridge': ensure => absent;
+    }
   }
 
   if $network_device_mtu {
